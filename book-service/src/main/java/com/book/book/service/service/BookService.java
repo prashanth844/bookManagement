@@ -2,7 +2,6 @@ package com.book.book.service.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import com.book.book.service.entity.Book;
 
 public interface BookService {

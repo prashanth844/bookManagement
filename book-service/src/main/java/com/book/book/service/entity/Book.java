@@ -2,6 +2,9 @@ package com.book.book.service.entity;
 
 import java.util.Date;
 
+import org.hibernate.annotations.UuidGenerator;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -12,6 +15,8 @@ import jakarta.persistence.Table;
 public class Book {
 
 	@Id
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false)
 	private String id;
 	private String name;
 	private double price;

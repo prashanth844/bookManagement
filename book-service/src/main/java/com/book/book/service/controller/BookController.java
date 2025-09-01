@@ -13,6 +13,7 @@ import com.book.book.service.service.BookService;
 
 @RestController
 @RequestMapping("/api/books")
+@CrossOrigin(origins = "http://localhost:5173")
 public class BookController {
 
 	@Autowired

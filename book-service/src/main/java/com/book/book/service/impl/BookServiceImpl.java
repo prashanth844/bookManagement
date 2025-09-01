@@ -14,35 +14,44 @@ import com.book.book.service.service.BookService;
 @Service
 public class BookServiceImpl implements BookService {
 
-	@Autowired
-	private BookRepository bookRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
-	@Override
-	public Book registerBook(Book book) {
-		return bookRepository.save(book);
-	}
+    @Override
+    public Book registerBook(Book book) {
+        return bookRepository.save(book);
+    }
 
-	@Override
-	public Optional<Book> getBookById(String id) {
-		return Optional.ofNullable(bookRepository.findById(id)
-				.orElseThrow(() -> new BookNotFoundException("Book not found with the given id: " + id)));
-	}
+    @Override
+    public Optional<Book> getBookById(String id) {
+        return bookRepository.findById(id)
+                .or(() -> { throw new BookNotFoundException("Book not found with the given id: " + id); });
+    }
 
-	@Override
-	public Book updateBook(Book book, String id) {
-		if (!bookRepository.existsById(id)) {
-			throw new BookNotFoundException("Book not found with the given id: " + id);
-		}
-		return bookRepository.save(book);
-	}
+    @Override
+    public Book updateBook(Book book, String id) {
+        Book existingBook = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book not found with the given id: " + id));
 
-	@Override
-	public List<Book> getAllBooks() {
-		return bookRepository.findAll();
-	}
+        existingBook.setName(book.getName());
+        existingBook.setAuthor(book.getAuthor());
+        existingBook.setPrice(book.getPrice());
+        existingBook.setPublishedDate(book.getPublishedDate());
 
-	@Override
-	public void deleteBook(String id) {
-		bookRepository.deleteById(id);
-	}
+        return bookRepository.save(existingBook);
+    }
+
+    @Override
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    @Override
+    public void deleteBook(String id) {
+        if (!bookRepository.existsById(id)) {
+            throw new BookNotFoundException("Book not found with the given id: " + id);
+        }
+        bookRepository.deleteById(id);
+    }
+
 }
